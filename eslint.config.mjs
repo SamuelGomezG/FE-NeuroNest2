@@ -48,8 +48,8 @@ export default [
       react,
       'react-native': reactNative,
       'react-hooks': reactHooks,
-      'import': eslintImport,
-      'prettier': eslintPluginPrettier
+      import: eslintImport,
+      prettier: eslintPluginPrettier,
     },
     languageOptions: {
       parser: tsParser, // Use TypeScript parser for parsing code
@@ -75,7 +75,7 @@ export default [
       'import/resolver': {
         node: {
           extensions: ['.js', '.jsx', '.ts', '.tsx'],
-          paths: ['src']
+          paths: ['src'],
         },
         typescript: {
           alwaysTryTypes: true,
@@ -87,7 +87,10 @@ export default [
       // General rules
       'no-console': ['warn', { allow: ['warn', 'error'] }], // Warn on console.log but allow console.warn and console.error
       'no-unused-vars': 'off', // Disable ESLint unused vars check in favor of TypeScript's
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' }], // Error on unused vars except those starting with underscore
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
+      ], // Error on unused vars except those starting with underscore
 
       // React rules
       'react/react-in-jsx-scope': 'off', // Don't require React import in JSX files (not needed in React 17+)
@@ -107,7 +110,7 @@ export default [
 
       // Accessibility - important but warn-only for prototype
       'react-native/no-single-element-style-arrays': 'warn',
-      
+
       // TypeScript rules
       '@typescript-eslint/explicit-module-boundary-types': 'off', // Don't require explicit return types on functions
       '@typescript-eslint/no-explicit-any': 'warn', // Warn when 'any' type is used
@@ -116,12 +119,15 @@ export default [
       '@typescript-eslint/consistent-type-imports': ['warn', { prefer: 'type-imports' }],
 
       // Import ordering - helps maintain organized code
-      'import/order': ['warn', {
-        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
-        'newlines-between': 'always',
-        alphabetize: { order: 'asc' }
-      }],
-      
+      'import/order': [
+        'warn',
+        {
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+          'newlines-between': 'always',
+          alphabetize: { order: 'asc' },
+        },
+      ],
+
       // Environment-specific rules
       'no-process-env': 'off', // Allow process.env for react-native-dotenv support
     },
@@ -146,6 +152,6 @@ export default [
       // Allow more flexible component naming in route files
       'react/function-component-definition': 'off',
       'import/no-anonymous-default-export': 'off',
-    }
-  }
+    },
+  },
 ];
