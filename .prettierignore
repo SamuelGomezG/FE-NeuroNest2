@@ -1,0 +1,38 @@
+# Build outputs
+dist/
+build/
+web-build/
+.expo/
+
+# Node packages
+node_modules/
+
+# Generated files
+expo-env.d.ts
+*.tsbuildinfo
+
+# Package manager logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Cache
+.cache/
+.eslintcache
+
+# Config files with specific formats
+*.svg
+*.json.hbs
+*.lock
+yarn.lock
+package-lock.json
+
+# Assets
+assets/
+
+# Any minified files
+*.min.js
+*.min.css
+
+# Coverage directory
+coverage/
