@@ -3,6 +3,7 @@ import react from 'eslint-plugin-react';
 import reactNative from 'eslint-plugin-react-native';
 import reactHooks from 'eslint-plugin-react-hooks';
 import eslintImport from 'eslint-plugin-import';
+import eslintPluginPrettier from 'eslint-plugin-prettier';
 import tsParser from '@typescript-eslint/parser';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -47,7 +48,8 @@ export default [
       react,
       'react-native': reactNative,
       'react-hooks': reactHooks,
-      'import': eslintImport
+      'import': eslintImport,
+      'prettier': eslintPluginPrettier
     },
     languageOptions: {
       parser: tsParser, // Use TypeScript parser for parsing code
