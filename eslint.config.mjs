@@ -1,6 +1,8 @@
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import react from 'eslint-plugin-react';
 import reactNative from 'eslint-plugin-react-native';
+import reactHooks from 'eslint-plugin-react-hooks';
+import eslintImport from 'eslint-plugin-import';
 import tsParser from '@typescript-eslint/parser';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -37,7 +39,6 @@ export default [
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
     'plugin:react-native/all',
-    'prettier', // Make sure ESLint doesn't conflict with Prettier formatting
   ),
   {
     // Register necessary plugins
@@ -45,12 +46,8 @@ export default [
       '@typescript-eslint': typescriptEslint,
       react,
       'react-native': reactNative,
-    },
-    // Enable React Native and Node.js environments and ES2022 features
-    env: {
-      'react-native/react-native': true,
-      es2022: true,
-      node: true,
+      'react-hooks': reactHooks,
+      'import': eslintImport
     },
     languageOptions: {
       parser: tsParser, // Use TypeScript parser for parsing code
@@ -61,6 +58,12 @@ export default [
         ecmaFeatures: {
           jsx: true, // Enable JSX syntax support
         },
+      },
+      // Enable React Native and Node.js environments and ES2022 features
+      globals: {
+        'react-native/react-native': true,
+        es2022: true,
+        node: true,
       },
     },
     settings: {
@@ -101,7 +104,6 @@ export default [
       'react-native/no-color-literals': 'warn', // Warn instead of error for prototype
 
       // Accessibility - important but warn-only for prototype
-      'react-native/accessibility-label': 'warn',
       'react-native/no-single-element-style-arrays': 'warn',
       
       // TypeScript rules
@@ -122,7 +124,7 @@ export default [
       'no-process-env': 'off', // Allow process.env for react-native-dotenv support
     },
     // Ignore directories and files that don't require checking
-    ignorePatterns: [
+    ignores: [
       'node_modules/',
       'dist/',
       'build/',
