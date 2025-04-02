@@ -67,27 +67,59 @@ export default [
       react: {
         version: 'detect',
       },
+      'import/resolver': {
+        node: {
+          extensions: ['.js', '.jsx', '.ts', '.tsx'],
+          paths: ['src']
+        },
+        typescript: {
+          alwaysTryTypes: true,
+          project: './tsconfig.json',
+        },
+      },
     },
     rules: {
       // General rules
       'no-console': ['warn', { allow: ['warn', 'error'] }], // Warn on console.log but allow console.warn and console.error
       'no-unused-vars': 'off', // Disable ESLint unused vars check in favor of TypeScript's
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }], // Error on unused vars except those starting with underscore
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' }], // Error on unused vars except those starting with underscore
 
       // React rules
       'react/react-in-jsx-scope': 'off', // Don't require React import in JSX files (not needed in React 17+)
       'react/prop-types': 'off', // Don't require prop-types as we use TypeScript
       'react/jsx-uses-react': 'off', // Not needed in React 17+ with new JSX transform
 
+      // React hooks rules - important for functional components
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+
       // React Native rules
       'react-native/no-raw-text': ['error', { skip: ['Text'] }], // Enforce using Text component except in specified components
       'react-native/no-unused-styles': 'error', // Error on unused StyleSheet styles
       'react-native/split-platform-components': 'error', // Error when platform-specific components aren't split properly
+      'react-native/no-inline-styles': 'warn', // Warn instead of error for prototype
+      'react-native/no-color-literals': 'warn', // Warn instead of error for prototype
 
+      // Accessibility - important but warn-only for prototype
+      'react-native/accessibility-label': 'warn',
+      'react-native/no-single-element-style-arrays': 'warn',
+      
       // TypeScript rules
       '@typescript-eslint/explicit-module-boundary-types': 'off', // Don't require explicit return types on functions
       '@typescript-eslint/no-explicit-any': 'warn', // Warn when 'any' type is used
       '@typescript-eslint/ban-ts-comment': 'warn', // Warn on TypeScript directive comments like @ts-ignore
+      '@typescript-eslint/no-non-null-assertion': 'warn', // Allow but warn about non-null assertions
+      '@typescript-eslint/consistent-type-imports': ['warn', { prefer: 'type-imports' }],
+
+      // Import ordering - helps maintain organized code
+      'import/order': ['warn', {
+        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+        'newlines-between': 'always',
+        alphabetize: { order: 'asc' }
+      }],
+      
+      // Environment-specific rules
+      'no-process-env': 'off', // Allow process.env for react-native-dotenv support
     },
     // Ignore directories and files that don't require checking
     ignorePatterns: [
@@ -101,4 +133,15 @@ export default [
       '.eslintrc.js',
     ],
   },
+  // Special rules for expo-router files
+  {
+    files: ['src/app/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}'],
+    rules: {
+      // Allow underscore-prefixed files (required by expo-router)
+      'react/display-name': 'off',
+      // Allow more flexible component naming in route files
+      'react/function-component-definition': 'off',
+      'import/no-anonymous-default-export': 'off',
+    }
+  }
 ];
