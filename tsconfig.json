@@ -10,11 +10,15 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "baseUrl": ".",
+    "rootDir": ".",
     "paths": {
       "@/*": ["/src/*"]
     },
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "checkJs": true
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "src/**/*.js",
+    "src/**/*.jsx"]
 }
