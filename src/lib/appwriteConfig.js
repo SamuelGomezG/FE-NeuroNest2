@@ -82,8 +82,7 @@ export const createUser = async (email, password, userName) => {
 /**
  * Takes information from currently logged-in user and queries the database to check if said user exists using Appwrite
  * @async
- * @returns {Promise<import('react-native-appwrite').Models.Document>} Current user's document if found
- * @throws {Error} If no user is currently logged in or if current user does not exist in the database
+ * @returns {Promise<import('react-native-appwrite').Models.Document | null>} Current user's document if found, null otherwise
  */
 export const getCurrentUser = async () => {
   try {
@@ -100,9 +99,11 @@ export const getCurrentUser = async () => {
     return currentUser.documents[0];
   } catch (error) {
     if (error instanceof Error) {
-      throw error;
+      console.error('Error getting current user:', error.message);
     } else {
-      throw new Error(typeof error === 'string' ? error : 'Unknown error ocurred.');
+      console.error('Unknown error ocurred while getting current user:', error);
     }
+
+    return null;
   }
 };
