@@ -5,20 +5,23 @@
     "target": "ESNext",
     "module": "NodeNext",
     "jsx": "react-native",
+    "lib": ["ESNext"],
     "moduleResolution": "nodenext",
+    "noEmit": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "baseUrl": ".",
     "rootDir": ".",
-    "paths": {
-      "@/*": ["/src/*"]
-    },
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "allowJs": true,
-    "checkJs": true
+    "checkJs": true,
+    "paths": {
+      "@/*": ["/src/*"]
+    },
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "src/**/*.js",
-    "src/**/*.jsx"]
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "env.d.ts", "**/*.js",
+    "**/*.jsx"],
+  "exclude": ["node_modules"]
 }
