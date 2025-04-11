@@ -24,6 +24,7 @@ yarn-error.log*
 *.svg
 *.json.hbs
 *.lock
+*.config.js
 yarn.lock
 package-lock.json
 
