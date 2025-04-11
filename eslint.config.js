@@ -38,22 +38,26 @@ module.exports = tseslint.config(
     ],
   },
   {
-    files: ['**/*.{js,jsx,ts,tsx}'],
+    files: ['src/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}'],
     // Register plugins
     plugins: {
-      react: reactPlugin,
+      'react': reactPlugin,
       'react-hooks': hooksPlugin,
       'react-native': reactNativePlugin,
-      import: importPlugin,
-      prettier: prettierPlugin,
+      'import': importPlugin,
+      'prettier': prettierPlugin,
     },
     languageOptions: {
+      parser: tseslint.parser,
       parserOptions: {
         ecmaVersion: 'latest', // Use latest ECMAScript version
         sourceType: 'module', // Treat source files as ECMAScript modules
         project: './tsconfig.json', // Path to TypeScript configuration
         ecmaFeatures: {
           jsx: true, // Enable JSX syntax support
+        },
+        babelOptions: {
+          presets: ['module:metro-react-native-babel-preset'],
         },
       },
       globals: {
@@ -66,16 +70,15 @@ module.exports = tseslint.config(
         version: 'detect',
       },
       'import/resolver': {
-        node: {
-          extensions: ['.js', '.jsx', '.ts', '.tsx'],
-          paths: ['src'],
-        },
+        node: true,
         typescript: {
           alwaysTryTypes: true,
           project: './tsconfig.json',
         },
       },
-      node: true,
+      'import/parsers': {
+        '@typescript-eslint/parser': ['.ts', '.tsx', '.d.ts'],
+      },
     },
     rules: {
       // Base recommended rules
