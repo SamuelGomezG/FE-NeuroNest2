@@ -1,69 +1,53 @@
-import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import react from 'eslint-plugin-react';
-import reactNative from 'eslint-plugin-react-native';
-import reactHooks from 'eslint-plugin-react-hooks';
-import eslintImport from 'eslint-plugin-import';
-import eslintPluginPrettier from 'eslint-plugin-prettier';
-import tsParser from '@typescript-eslint/parser';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import js from '@eslint/js';
-import { FlatCompat } from '@eslint/eslintrc';
+const eslint = require('@eslint/js');
+const tseslint = require('typescript-eslint');
+const reactPlugin = require('eslint-plugin-react');
+const hooksPlugin = require('eslint-plugin-react-hooks');
+const reactNativePlugin = require('eslint-plugin-react-native');
+const importPlugin = require('eslint-plugin-import');
+const prettierPlugin = require('eslint-plugin-prettier');
+const prettierConfig = require('eslint-config-prettier');
+const globals = require('globals');
 
-const __filename = fileURLToPath(import.meta.url); // Convert the current module URL to a filesystem path
-const __dirname = path.dirname(__filename); // Get the directory name of the current file
+const currentDirectory = __dirname;
 
-// Create a compatibility layer for traditional ESLint configs in the new flat config system
-const compat = new FlatCompat({
-  baseDirectory: __dirname, // Set the base directory for resolving relative paths
-  recommendedConfig: js.configs.recommended, // Use ESLint's recommended configuration
-  allConfig: js.configs.all, // Include all ESLint configurations
-});
+const trimGlobalKeys = globalsObject => {
+  if (!globalsObject) return {};
+  const newGlobals = {};
+  for (const key in globalsObject) {
+    if (Object.prototype.hasOwnProperty.call(globalsObject, key)) {
+      newGlobals[key.trim()] = globalsObject[key];
+    }
+  }
+  return newGlobals;
+};
 
-/**
- * ESLint configuration for a React Native project with TypeScript.
- *
- * This configuration:
- * - Extends recommended configs for ESLint, TypeScript, React, and React Native
- * - Integrates with Prettier to avoid formatting conflicts
- * - Sets up appropriate parser options for TypeScript and JSX
- * - Defines custom rules for React Native and TypeScript development
- * - Ignores common build directories and configuration files
- *
- * @module eslint.config
- * @exports {Array} - Default ESLint configuration array for the project
- */
-export default [
-  ...compat.extends(
-    // Include recommended or necessary rulesets
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:react/recommended',
-    'plugin:react-native/all',
-  ),
+module.exports = tseslint.config(
+  eslint.configs.recommended,
+  ...tseslint.configs.recommended,
   {
-    // Ignore directories and files that don't require checking
     ignores: [
       'node_modules/',
       'dist/',
       'build/',
       '.expo/',
+      'android/',
+      'ios/',
       'web-build/',
-      'app.config.js',
-      'eslint.config.mjs',
+      '**/*.config.js',
       '.eslintrc.js',
     ],
-    // Register necessary plugins
+  },
+  {
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    // Register plugins
     plugins: {
-      '@typescript-eslint': typescriptEslint,
-      react,
-      'react-native': reactNative,
-      'react-hooks': reactHooks,
-      import: eslintImport,
-      prettier: eslintPluginPrettier,
+      react: reactPlugin,
+      'react-hooks': hooksPlugin,
+      'react-native': reactNativePlugin,
+      import: importPlugin,
+      prettier: prettierPlugin,
     },
     languageOptions: {
-      parser: tsParser, // Use TypeScript parser for parsing code
       parserOptions: {
         ecmaVersion: 'latest', // Use latest ECMAScript version
         sourceType: 'module', // Treat source files as ECMAScript modules
@@ -72,11 +56,9 @@ export default [
           jsx: true, // Enable JSX syntax support
         },
       },
-      // Enable React Native and Node.js environments and ES2022 features
       globals: {
-        'react-native/react-native': true,
-        es2022: true,
-        node: true,
+        ...trimGlobalKeys(globals.browser),
+        ...trimGlobalKeys(globals.node),
       },
     },
     settings: {
@@ -93,8 +75,16 @@ export default [
           project: './tsconfig.json',
         },
       },
+      node: true,
     },
     rules: {
+      // Base recommended rules
+      ...reactPlugin.configs.recommended.rules,
+      ...hooksPlugin.configs.recommended.rules,
+      ...reactNativePlugin.configs.all.rules,
+      ...importPlugin.configs.recommended.rules,
+      ...prettierPlugin.configs.recommended.rules,
+
       // General rules
       'no-console': ['warn', { allow: ['warn', 'error'] }], // Warn on console.log but allow console.warn and console.error
       'no-unused-vars': 'off', // Disable ESLint unused vars check in favor of TypeScript's
@@ -108,17 +98,12 @@ export default [
       'react/prop-types': 'off', // Don't require prop-types as we use TypeScript
       'react/jsx-uses-react': 'off', // Not needed in React 17+ with new JSX transform
 
-      // React hooks rules - important for functional components
-      'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
-
       // React Native rules
       'react-native/no-raw-text': ['error', { skip: ['Text'] }], // Enforce using Text component except in specified components
       'react-native/no-unused-styles': 'error', // Error on unused StyleSheet styles
       'react-native/split-platform-components': 'error', // Error when platform-specific components aren't split properly
       'react-native/no-inline-styles': 'warn', // Warn instead of error for prototype
       'react-native/no-color-literals': 'warn', // Warn instead of error for prototype
-
       // Accessibility - important but warn-only for prototype
       'react-native/no-single-element-style-arrays': 'warn',
 
@@ -129,15 +114,19 @@ export default [
       '@typescript-eslint/no-non-null-assertion': 'warn', // Allow but warn about non-null assertions
       '@typescript-eslint/consistent-type-imports': ['warn', { prefer: 'type-imports' }],
 
-      // Import ordering - helps maintain organized code
       'import/order': [
         'warn',
         {
           groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
           'newlines-between': 'always',
-          alphabetize: { order: 'asc' },
+          alphabetize: { order: 'asc', caseInsensitive: true },
         },
       ],
+      'import/no-unresolved': 'error',
+      'import/named': 'error',
+      'import/namespace': 'error',
+      'import/default': 'error',
+      'import/export': 'error',
 
       // Environment-specific rules
       'no-process-env': 'off', // Allow process.env for react-native-dotenv support
@@ -145,7 +134,7 @@ export default [
   },
   // Special rules for expo-router files
   {
-    files: ['src/app/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}'],
+    files: ['src/app/**/*.{ts,tsx}'],
     rules: {
       // Allow underscore-prefixed files (required by expo-router)
       'react/display-name': 'off',
@@ -154,4 +143,5 @@ export default [
       'import/no-anonymous-default-export': 'off',
     },
   },
-];
+  prettierConfig,
+);
