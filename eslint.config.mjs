@@ -42,6 +42,17 @@ export default [
     'plugin:react-native/all',
   ),
   {
+    // Ignore directories and files that don't require checking
+    ignores: [
+      'node_modules/',
+      'dist/',
+      'build/',
+      '.expo/',
+      'web-build/',
+      'app.config.js',
+      'eslint.config.mjs',
+      '.eslintrc.js',
+    ],
     // Register necessary plugins
     plugins: {
       '@typescript-eslint': typescriptEslint,
@@ -131,17 +142,6 @@ export default [
       // Environment-specific rules
       'no-process-env': 'off', // Allow process.env for react-native-dotenv support
     },
-    // Ignore directories and files that don't require checking
-    ignores: [
-      'node_modules/',
-      'dist/',
-      'build/',
-      '.expo/',
-      'web-build/',
-      '*.config.js',
-      'eslint.config.mjs',
-      '.eslintrc.js',
-    ],
   },
   // Special rules for expo-router files
   {
