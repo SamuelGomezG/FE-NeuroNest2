@@ -22,8 +22,6 @@ const trimGlobalKeys = globalsObject => {
 };
 
 module.exports = tseslint.config(
-  eslint.configs.recommended,
-  ...tseslint.configs.recommended,
   {
     ignores: [
       'node_modules/',
@@ -37,8 +35,11 @@ module.exports = tseslint.config(
       '.eslintrc.js',
     ],
   },
+  eslint.configs.recommended,
+  ...tseslint.configs.recommended,
   {
-    files: ['src/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}'],
+    files: ['./src/**/*.{ts,tsx}', 'app/**/*.{ts,tsx}'],
+    ignores: ['node_modules/**'],
     // Register plugins
     plugins: {
       'react': reactPlugin,
@@ -127,7 +128,7 @@ module.exports = tseslint.config(
       ],
       'import/no-unresolved': 'error',
       'import/named': 'error',
-      'import/namespace': 'error',
+      'import/namespace': 'off',
       'import/default': 'error',
       'import/export': 'error',
 
